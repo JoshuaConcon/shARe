@@ -269,7 +269,9 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     // RESIZING IMAGES
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
-        // USAGE: self.resizeImage(UIImage(named: "yourImageName")!, targetSize: CGSizeMake(200.0, 200.0))
+        // USAGE:
+        // let size = CGSize(width: 100, height: 100)
+        // self.resizeImage(UIImage(named: "yourImageName")!, targetSize: size)
         // THE LINE ABOVE RESIZES IMAGE TO 200*200
         let size = image.size
         
