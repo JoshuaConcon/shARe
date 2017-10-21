@@ -233,7 +233,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                         sceneLocationView.moveSceneHeadingClockwise()
                     } else {
                         let image = UIImage(named: "pin")!
-                        let annotationNode = LocationAnnotationNode(location: nil, image: image)
+                        let annotationNode = LocationAnnotationNode(location: self.sceneLocationView.bestLocationEstimate()?.location, image: image)
                         annotationNode.scaleRelativeToDistance = true
                         sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
                     }
@@ -267,7 +267,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         return nil
     }
     
-    // RESIZING IMAGES
+    /** RESIZING IMAGES
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         // USAGE:
         // let size = CGSize(width: 100, height: 100)
@@ -296,7 +296,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         UIGraphicsEndImageContext()
         
         return newImage
-    }
+    } **/
 
     
     //MARK: SceneLocationViewDelegate
