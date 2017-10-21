@@ -8,14 +8,14 @@ export default class App extends Component {
       <View style={{ flex: 1 }}>
         <ARKit
         style={{ flex: 1 }}
-        debug
-        planeDetection
-        lightEstimation
-      >   
-        <ARKit.Pyramid
-          pos={{ x: 0.2, y: 0.15, z: 0 }}
-          shape={{ width: 0.5, height: 0.5, length: 0.5 }}
-        />
+        debug // debug mode will show feature points detected and 3D axis
+        planeDetection // turn on plane detection
+        lightEstimation // turn on light estimation
+      >
+      <ARKit.Pyramid
+      pos={{ x: 0, y: 0, z: 0 }}
+      shape={{ width: 0.5, height: 0.5, length: 0.5 }}
+    />
       </ARKit>
       </View>
     );
