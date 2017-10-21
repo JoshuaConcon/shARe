@@ -36,9 +36,56 @@ AWS.config.update({ region: process.env.REGION })
 // Documentation for the class is available here: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/DynamoDB/DocumentClient.html
 var dynamoDb = new AWS.DynamoDB.DocumentClient()
 
+var putCallback = function(err, data) {
+    if (err) {
+        console.log(err)
+    }
+}
+
+function createPin(userId) {
+    var item1 = {}
+    item1.id = uuid.v1()
+    item1.latitude = 42.3808539
+    item1.longitude = -71.12514399999998
+    item1.comment = "Harvard University"
+    item1.rating = 50
+    dynamoDb.put({
+        Item: item1,
+        TableName: locations
+    }, putCallback)
+}
+
+app.post('/items/locations/new', function(req, res){
+    var location = {}
+    location.id = uuid.v1()
+    location.latitude = req.body.latitude
+    location.longitude = req.body.longitude
+    location.comment = req.body.comment
+    location.rating = req.body.rating
+    dynamoDb.put({
+        Item: location,
+        TableName: locations
+    }, function(err,data){
+        if (err){
+            res.json({ message: err })
+        }else {
+            res.json({
+                message: "New location added!"
+            })
+        }
+    })
+    createMenu(location.id)
+})
+
 /**********************
- * Restaurant methods *
+ * Location methods *
  **********************/
+
+
+
+ /**********************
+  * Restaurant methods *
+  **********************/
 
 app.get('/items/restaurants', function(req, res) {
     // performs a DynamoDB Scan operation to extract all of the records in the table
