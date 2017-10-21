@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_ARKit_CoreLocationVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_ARKit_CoreLocationVersionString[];
+FOUNDATION_EXPORT double ARCLVersionNumber;
+FOUNDATION_EXPORT const unsigned char ARCLVersionString[];
 
