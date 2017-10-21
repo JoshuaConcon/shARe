@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const S3Plugin = require('webpack-s3-plugin');
 
 module.exports = {
   entry: [
@@ -76,8 +77,20 @@ module.exports = {
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
     //new BundleAnalyzerPlugin({ analyzerMode: 'static' })
+    new S3Plugin({
+      // Only upload css and js
+      include: /.*\.(css|js)/,
+      // s3Options are required
+      s3Options: {
+        accessKeyId: 'AKIAJEXV6VS5KR6D7VKA',
+        secretAccessKey: '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',
+      },
+      s3UploadOptions: {
+        Bucket: 'share-hosting-mobilehub-849015618'
+      }
+    })
   ],
   watch: false
 };

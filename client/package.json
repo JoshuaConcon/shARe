@@ -54,6 +54,6 @@
     "react-tap-event-plugin": "^2.0.1",
     "react-transition-group": "^1.1.3",
     "semantic-ui-react": "^0.68.3",
-    "webpack-s3-plugin": "^1.0.0-rc.0"
+    "webpack-s3-plugin": "https://registry.npmjs.org/webpack-s3-plugin/-/webpack-s3-plugin-1.0.0-rc.0.tgz"
   }
 }
