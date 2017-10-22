@@ -114,6 +114,14 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             
             // Create 3D Text
             
+            if !closestResult.anchor {
+                print("HIT A PIN!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            } else {
+                let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
+                sceneLocationView.scene.rootNode.addChildNode(node)
+                node.position = worldCoord
+            }
+            
             let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
             sceneLocationView.scene.rootNode.addChildNode(node)
             node.position = worldCoord
