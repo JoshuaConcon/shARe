@@ -16,33 +16,37 @@ import AWSDynamoDB
 import AWSSQS
 import AWSSNS
 
-/** @IBAction func addButton(_ sender: Any) {
-    
-    let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
-    
-    //Create data object using data models you downloaded from Mobile Hub
-    let newsItem: News = News();
-    
-    // Use AWSIdentityManager.default().identityId here to get the user identity id.
-    newsItem.setUserId(AWSIdentityManager.default().identityId);
-    
-    newsItem._articleId = "YourArticleId"
-    newsItem._title = "YourTitlestring"
-    newsItem._author = "YourAuthor"
-    newsItem._creationDate = "YourCreateDate"
-    
-    //Save a new item
-    dynamoDbObjectMapper.save(newsItem, completionHandler: {
-        (error: Error?) -> Void in
-        
-        if let error = error {
-            print("Amazon DynamoDB Save Error: \(error)")
-            return
-        }
-        print("An item was saved.")
-    })
-    
-} */
+//@IBAction func addButton(_ sender: Any) {
+//
+//        let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
+//
+//        //Create data object using data models you downloaded from Mobile Hub
+//        let locationItem: Locations = Locations();
+//
+//        // For Location
+//        var _id: String?
+//        var _latitude: NSNumber?
+//        var _longitude: NSNumber?
+//
+//
+//        // Set lat and long with Bohan's method afterwards
+//        locationItem._id = AWSIdentityManager.default().identityId
+//        locationItem._x = 0
+//        locationItem._y = 0
+//        locationItem._z = 0
+//        locationItem._comment = "Hello World"
+//
+//        // Save a new item
+//        dynamoDbObjectMapper.save(locationItem, completionHandler: {
+//            (error: Error?) -> Void in
+//
+//            if let error = error {
+//                print("Amazon DynamoDB Save Error: \(error)")
+//                return
+//            }
+//            print("A locaiton was added.")
+//        })
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -53,33 +57,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // AWS setup
-        /* let didFinishLaunching = AWSSignInManager.sharedInstance().interceptApplication(
-            application, didFinishLaunchingWithOptions: launchOptions)
-        
-        if (!isInitialized) {
-            AWSSignInManager.sharedInstance().resumeSession(completionHandler: {
-                (result: Any?, error: Error?) in
-                print("Result: \(result) \n Error:\(error)")
-            })
-            isInitialized = true
-        }
+//        // AWS setup
+//        let didFinishLaunching = AWSSignInManager.sharedInstance().interceptApplication(
+//            application, didFinishLaunchingWithOptions: launchOptions)
+//
+//        if (!isInitialized) {
+//            AWSSignInManager.sharedInstance().resumeSession(completionHandler: {
+//                (result: Any?, error: Error?) in
+//                print("Result: \(result) \n Error:\(error)")
+//            })
+//            isInitialized = true
+//        }
         
         // AWS Logging
         let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "us-east-1:e6b0fb0f-3eb8-4a96-804a-9c6ae399b0e7")
         let configuration = AWSServiceConfiguration(region: .USEast1, credentialsProvider: credentialProvider)
         AWSServiceManager.default().defaultServiceConfiguration = configuration
-        let transferManager = AWSS3TransferManager.default()
-        
-        let uploadRequest = AWSS3TransferManagerUploadRequest()
-        uploadRequest.bucket = "myBucket"
-        uploadRequest.key = "myTestFile.txt"
-        uploadRequest.body = uploadingFileURL
-        uploadRequest.contentLength = fileSize
-        
-        transferManager.upload(uploadRequest).continueWith(executor: AWSExecutor.mainThread(), block: { (task:AWSTask<AnyObject>) -> Any? in
-            // Do something with the response
-        }) */
+
 
         
         // Override point for customization after application launch.
