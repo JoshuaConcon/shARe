@@ -2,13 +2,12 @@ source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '11.0'
 use_frameworks!
 pod 'ARCL'
-target 'shARe' do
-	pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack', :branch => 'master'
-    pod 'AWSAutoScaling'
+pod 'AWSAutoScaling'
     pod 'AWSCloudWatch'
     pod 'AWSCognito'
     pod 'AWSCognitoIdentityProvider'
     pod 'AWSCore'
+    pod 'AWSAuthCore'
     pod 'AWSDynamoDB'
     pod 'AWSEC2'
     pod 'AWSElasticLoadBalancing'
@@ -26,4 +25,6 @@ target 'shARe' do
     pod 'AWSSimpleDB'
     pod 'AWSSNS'
     pod 'AWSSQS'
-end
+target 'shARe' do
+	pod 'CocoaLumberjack/Swift', :git => 'https://github.com/CocoaLumberjack/CocoaLumberjack', :branch => 'master'
+    end
