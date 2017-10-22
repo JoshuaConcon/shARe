@@ -20,7 +20,7 @@ import AWSSQS
 import AWSSNS
 
 @available(iOS 11.0, *)
-class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate, ARSCNViewDelegate{
+class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate, ARSCNViewDelegate, UITextFieldDelegate{
     
     let sceneLocationView = SceneLocationView()
     
@@ -74,6 +74,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             print("A locaiton was added.")
         })
       
+
         let scene = SCNScene()
         sceneLocationView.scene = scene
         sceneLocationView.autoenablesDefaultLighting = true
@@ -129,11 +130,75 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
         
+        textField.delegate = self
+        view.setNeedsUpdateConstraints()
+        view.addSubview(textField)
+      
     }
+    override func updateViewConstraints() {
+        textFieldConstraints()
+        super.updateViewConstraints()
+    }
+    
+    func textFieldConstraints() {
+        NSLayoutConstraint(
+            item: textField,
+            attribute: .centerX,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .centerX,
+            multiplier: 1.0,
+            constant: 0.0)
+            .isActive = true
+        
+        NSLayoutConstraint(
+            item: textField,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .width,
+            multiplier: 0.8,
+            constant: 0.0)
+            .isActive = true
+        
+        
+        NSLayoutConstraint(
+            item: textField,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: view,
+            attribute: .bottom,
+            multiplier: 0.1,
+            constant: 0.0)
+            .isActive = true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        // Dismisses the Keyboard by making the text field resign
+        // first responder
+        textField.resignFirstResponder()
+        
+        // returns false. Instead of adding a line break, the text
+        // field resigns
+        return false
+    }
+    
+    var textField: UITextField! = {
+        let view = UITextField()
+        view.placeholder = "Enter Message Here"
+        view.font = UIFont.systemFont(ofSize: 15)
+        view.borderStyle = UITextBorderStyle.roundedRect
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+
     
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
         // HIT TEST : REAL WORLD
         // Get Screen Centre
+        
         let screenCentre : CGPoint = CGPoint(x: self.sceneLocationView.bounds.midX, y: self.sceneLocationView.bounds.midY)
         
         let arHitTestResults : [ARHitTestResult] = sceneLocationView.hitTest(screenCentre, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
@@ -145,17 +210,17 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             
             // Create 3D Text
             
-            if closestResult.anchor != nil{
-                print("HIT A PIN!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            if closestResult.anchor != nil {
+                print("HIT A PIN!")
             } else {
-                let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
+                // Print out coordinates
+               // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
+              
+                let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
                 sceneLocationView.scene.rootNode.addChildNode(node)
                 node.position = worldCoord
             }
-            
-            let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
-            sceneLocationView.scene.rootNode.addChildNode(node)
-            node.position = worldCoord
+
         }
     }
     
@@ -199,6 +264,41 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         bubbleNodeParent.constraints = [billboardConstraint]
         
         return bubbleNodeParent
+    }
+    
+    // MARK:- ---> Textfield Delegates
+    func textFieldDidBeginEditing(textField: UITextField) {
+        print("TextField did begin editing method called")
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        print("TextField did end editing method called")
+    }
+    
+    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+        print("TextField should begin editing method called")
+        return true;
+    }
+    
+    func textFieldShouldClear(textField: UITextField) -> Bool {
+        print("TextField should clear method called")
+        return true;
+    }
+    
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        print("TextField should end editing method called")
+        return true;
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        print("While entering the characters this method gets called")
+        return true;
+    }
+    
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        print("TextField should return method called")
+        textField.resignFirstResponder();
+        return true;
     }
     
     
