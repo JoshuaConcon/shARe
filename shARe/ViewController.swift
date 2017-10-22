@@ -220,11 +220,12 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 // Print out coordinates
                // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                 if (textField.text! != ""){
-                    let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
-                    sceneLocationView.scene.rootNode.addChildNode(node)
-                    textFieldShouldReturn(textField)
+                    // Print out coordinates
+                    // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                     
+                    let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
                     node.position = worldCoord
+                    sceneLocationView.scene.rootNode.addChildNode(node)
                 }
             }
 
@@ -245,8 +246,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         font = font?.withTraits(traits: .traitBold)
         bubble.font = font
         bubble.alignmentMode = kCAAlignmentCenter
-        bubble.firstMaterial?.diffuse.contents = UIColor.white
-        bubble.firstMaterial?.specular.contents = UIColor.white
+        bubble.firstMaterial?.diffuse.contents = UIColor.blue
+        bubble.firstMaterial?.specular.contents = UIColor.blue
         bubble.firstMaterial?.isDoubleSided = true
         // bubble.flatness // setting this too low can cause crashes.
         bubble.chamferRadius = CGFloat(bubbleDepth)
@@ -255,7 +256,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         let (minBound, maxBound) = bubble.boundingBox
         let bubbleNode = SCNNode(geometry: bubble)
         // Centre Node - to Centre-Bottom point
-        bubbleNode.pivot = SCNMatrix4MakeTranslation( (maxBound.x - minBound.x)/2, minBound.y, bubbleDepth/2)
+        bubbleNode.pivot = SCNMatrix4MakeTranslation( (maxBound.x - minBound.x)/2, minBound.y, (bubbleDepth/2) - 0.1)
         // Reduce default text size
         bubbleNode.scale = SCNVector3Make(0.2, 0.2, 0.2)
         
@@ -269,6 +270,10 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         bubbleNodeParent.addChildNode(bubbleNode)
         bubbleNodeParent.addChildNode(sphereNode)
         bubbleNodeParent.constraints = [billboardConstraint]
+        
+        // background NODE
+        let cube = SCNBox(width: CGFloat((maxBound.x - minBound.x)/4), height: CGFloat((maxBound.y - minBound.y)/2), length: 0.01, chamferRadius: 0.01)
+        bubbleNodeParent.geometry = cube
         
         return bubbleNodeParent
     }
