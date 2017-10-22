@@ -11,6 +11,13 @@ import SceneKit
 import MapKit
 import CocoaLumberjack
 import ARKit
+import AWSAuthCore
+import AWSCore
+import AWSCognito
+import AWSS3
+import AWSDynamoDB
+import AWSSQS
+import AWSSNS
 
 @available(iOS 11.0, *)
 class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate, ARSCNViewDelegate{
@@ -43,34 +50,29 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
-//
-//        //Create data object using data models you downloaded from Mobile Hub
-//        let locationItem: Locations = Locations();
-//
-//        // For Location
-//        var _id: String?
-//        var _latitude: NSNumber?
-//        var _longitude: NSNumber?
-//
-//
-//        // Set lat and long with Bohan's method afterwards
-//        locationItem._id = AWSIdentityManager.default().identityId
-//        locationItem._x = 0
-//        locationItem._y = 0
-//        locationItem._z = 0
-//        locationItem._comment = "Hello World"
-//
-//        // Save a new item
-//        dynamoDbObjectMapper.save(locationItem, completionHandler: {
-//            (error: Error?) -> Void in
-//
-//            if let error = error {
-//                print("Amazon DynamoDB Save Error: \(error)")
-//                return
-//            }
-//            print("A locaiton was added.")
-//        })
+        let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
+
+        //Create data object using data models you downloaded from Mobile Hub
+        let locationItem: Locations = Locations();
+
+
+        // Set lat and long with Bohan's method afterwards
+        locationItem._id = AWSIdentityManager.default().identityId
+        locationItem._x = 0
+        locationItem._y = 0
+        locationItem._z = 0
+        locationItem._comment = "Hello World"
+
+        // Save a new item
+        dynamoDbObjectMapper.save(locationItem, completionHandler: {
+            (error: Error?) -> Void in
+
+            if let error = error {
+                print("Amazon DynamoDB Save Error: \(error)")
+                return
+            }
+            print("A locaiton was added.")
+        })
       
         let scene = SCNScene()
         sceneLocationView.scene = scene
