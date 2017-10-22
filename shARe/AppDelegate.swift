@@ -16,6 +16,34 @@ import AWSDynamoDB
 import AWSSQS
 import AWSSNS
 
+@IBAction func addButton(_ sender: Any) {
+    
+    let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
+    
+    //Create data object using data models you downloaded from Mobile Hub
+    let newsItem: News = News();
+    
+    // Use AWSIdentityManager.default().identityId here to get the user identity id.
+    newsItem.setUserId(AWSIdentityManager.default().identityId);
+    
+    newsItem._articleId = "YourArticleId"
+    newsItem._title = "YourTitlestring"
+    newsItem._author = "YourAuthor"
+    newsItem._creationDate = "YourCreateDate"
+    
+    //Save a new item
+    dynamoDbObjectMapper.save(newsItem, completionHandler: {
+        (error: Error?) -> Void in
+        
+        if let error = error {
+            print("Amazon DynamoDB Save Error: \(error)")
+            return
+        }
+        print("An item was saved.")
+    })
+    
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     // set up the initialized flag
