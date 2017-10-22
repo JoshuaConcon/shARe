@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import SceneKit 
+import SceneKit
 import MapKit
 import CocoaLumberjack
 import ARKit
@@ -50,31 +50,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
-
-        //Create data object using data models you downloaded from Mobile Hub
-        let locationItem: Locations = Locations();
-
-
-        // Set lat and long with Bohan's method afterwards
-        locationItem._id = AWSIdentityManager.default().identityId
-        locationItem._x = 0
-        locationItem._y = 0
-        locationItem._z = 0
-        locationItem._comment = "Hello World"
-
-        // Save a new item
-        dynamoDbObjectMapper.save(locationItem, completionHandler: {
-            (error: Error?) -> Void in
-
-            if let error = error {
-                print("Amazon DynamoDB Save Error: \(error)")
-                return
-            }
-            print("A location was added.")
-        })
-      
-
+        
         let scene = SCNScene()
         sceneLocationView.scene = scene
         sceneLocationView.autoenablesDefaultLighting = true
@@ -95,9 +71,9 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         
         //Set to true to display an arrow which points north.
         //Checkout the comments in the property description and on the readme on this.
-//        sceneLocationView.orientToTrueNorth = false
+        //        sceneLocationView.orientToTrueNorth = false
         
-//        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
+        //        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
         sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
         
@@ -134,7 +110,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         textField.delegate = self
         view.setNeedsUpdateConstraints()
         view.addSubview(textField)
-      
+        
     }
     override func updateViewConstraints() {
         textFieldConstraints()
@@ -197,7 +173,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         return view
     }()
     
-
+    
     
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
         // HIT TEST : REAL WORLD
@@ -219,48 +195,42 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             if closestResult.anchor != nil {
                 print("HIT A PIN!")
             } else {
-                
-                // empty string constraint
-                
+                // Print out coordinates
+                // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                 if (textField.text! != ""){
+                    // Print out coordinates
+                    // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                     
-                    // 140 char constraint
-                    
-                    let char_count = textField.text?.count
-                    
-                    if (char_count <= 140){
-                        
-                        // word wraping
-                        
-                        let str_array = textField.text.split(" ")
-                        let i = 0
-                        let final_str = ""
-                        
-                        while(char_count > 20){
-                            let line = str_array[i]
-                            i = i + 1
-                            while(line.count < 20){
-                                line = line + " " + str_array[i]
-                                i = i + 1
-                            }
-                            line = line + "\n"
-                            
-                            final_str = final_str + line
-                            
-                            char_count = char_count - line.count
-                        }
-                        
-                        // Print out coordinates
-                        // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
-                        
-                        let node : SCNNode = createNewBubbleParentNode( "\(final_str!)" )
-                        textFieldShouldReturn(textField)
-                        node.position = worldCoord
-                        sceneLocationView.scene.rootNode.addChildNode(node)
-                    }
+                    let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
+                    textFieldShouldReturn(textField)
+                    node.position = worldCoord
+                    sceneLocationView.scene.rootNode.addChildNode(node)
                 }
             }
-
+            // Upload coordiantes
+            let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
+            
+            //Create data object using data models you downloaded from Mobile Hub
+            let locationItem: Locations = Locations();
+            
+            
+            // Set lat and long with Bohan's method afterwards
+            locationItem.id = String(transform.columns.3.x) + String(transform.columns.3.y)
+            locationItem.x = NSNumber(value: transform.columns.3.x)
+            locationItem.y = NSNumber(value: transform.columns.3.y)
+            locationItem.z = NSNumber(value: transform.columns.3.z)
+            locationItem.comment = textField.text!
+            // Save a new item
+            dynamoDbObjectMapper.save(locationItem, completionHandler: {
+                (error: Error?) -> Void in
+                
+                if let error = error {
+                    print("Amazon DynamoDB Save Error: \(error)")
+                    return
+                }
+                print("A locaiton was added.")
+            })
+            
         }
     }
     
@@ -310,41 +280,41 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         return bubbleNodeParent
     }
     /**
-    // MARK:- ---> Textfield Delegates
-    func textFieldDidBeginEditing(textField: UITextField) {
-        print("TextField did begin editing method called")
-    }
-    
-    func textFieldDidEndEditing(textField: UITextField) {
-        print("TextField did end editing method called")
-    }
-    
-    func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
-        print("TextField should begin editing method called")
-        return true;
-    }
-    
-    func textFieldShouldClear(textField: UITextField) -> Bool {
-        print("TextField should clear method called")
-        return true;
-    }
-    
-    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
-        print("TextField should end editing method called")
-        return true;
-    }
-    
-    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
-        print("While entering the characters this method gets called")
-        return true;
-    }
-    
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
-        print("TextField should return method called")
-        textField.resignFirstResponder();
-        return true;
-    }
-    */
+     // MARK:- ---> Textfield Delegates
+     func textFieldDidBeginEditing(textField: UITextField) {
+     print("TextField did begin editing method called")
+     }
+     
+     func textFieldDidEndEditing(textField: UITextField) {
+     print("TextField did end editing method called")
+     }
+     
+     func textFieldShouldBeginEditing(textField: UITextField) -> Bool {
+     print("TextField should begin editing method called")
+     return true;
+     }
+     
+     func textFieldShouldClear(textField: UITextField) -> Bool {
+     print("TextField should clear method called")
+     return true;
+     }
+     
+     func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+     print("TextField should end editing method called")
+     return true;
+     }
+     
+     func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+     print("While entering the characters this method gets called")
+     return true;
+     }
+     
+     func textFieldShouldReturn(textField: UITextField) -> Bool {
+     print("TextField should return method called")
+     textField.resignFirstResponder();
+     return true;
+     }
+     */
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -415,7 +385,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 UIView.animate(withDuration: 0.5, delay: 0, options: UIViewAnimationOptions.allowUserInteraction, animations: {
                     self.userAnnotation?.coordinate = currentLocation.coordinate
                 }, completion: nil)
-            
+                
                 if self.centerMapOnUserLocation {
                     UIView.animate(withDuration: 0.45, delay: 0, options: UIViewAnimationOptions.allowUserInteraction, animations: {
                         self.mapView.setCenter(self.userAnnotation!.coordinate, animated: false)
@@ -461,12 +431,41 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         }
         
         /*let date = Date()
-        let comp = Calendar.current.dateComponents([.hour, .minute, .second, .nanosecond], from: date)
-        
-        if let hour = comp.hour, let minute = comp.minute, let second = comp.second, let nanosecond = comp.nanosecond {
-            infoLabel.text!.append("\(String(format: "%02d", hour)):\(String(format: "%02d", minute)):\(String(format: "%02d", second)):\(String(format: "%03d", nanosecond / 1000000))")
-        } */
+         let comp = Calendar.current.dateComponents([.hour, .minute, .second, .nanosecond], from: date)
+         
+         if let hour = comp.hour, let minute = comp.minute, let second = comp.second, let nanosecond = comp.nanosecond {
+         infoLabel.text!.append("\(String(format: "%02d", hour)):\(String(format: "%02d", minute)):\(String(format: "%02d", second)):\(String(format: "%03d", nanosecond / 1000000))")
+         } */
     }
+    
+    /**  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+     super.touchesBegan(touches, with: event)
+     
+     if let touch = touches.first {
+     if touch.view != nil {
+     if (mapView == touch.view! ||
+     mapView.recursiveSubviews().contains(touch.view!)) {
+     centerMapOnUserLocation = false
+     } else {
+     
+     let location = touch.location(in: self.view)
+     
+     if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
+     print("left side of the screen")
+     sceneLocationView.moveSceneHeadingAntiClockwise()
+     } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
+     print("right side of the screen")
+     sceneLocationView.moveSceneHeadingClockwise()
+     } else {
+     let image = UIImage(named: "pin")!
+     let annotationNode = LocationAnnotationNode(location: self.sceneLocationView.bestLocationEstimate()?.location, image: image)
+     annotationNode.scaleRelativeToDistance = true
+     sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
+     }
+     }
+     }
+     }
+     } */
     
     //MARK: MKMapViewDelegate
     
@@ -493,8 +492,37 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         return nil
     }
     
-
-
+    /** RESIZING IMAGES
+     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
+     // USAGE:
+     // let size = CGSize(width: 100, height: 100)
+     // self.resizeImage(UIImage(named: "yourImageName")!, targetSize: size)
+     // THE LINE ABOVE RESIZES IMAGE TO 200*200
+     let size = image.size
+     
+     let widthRatio  = targetSize.width  / image.size.width
+     let heightRatio = targetSize.height / image.size.height
+     
+     // Figure out what our orientation is, and use that to form the rectangle
+     var newSize: CGSize
+     if(widthRatio > heightRatio) {
+     newSize = CGSizeMake(size.width * heightRatio, size.height * heightRatio)
+     } else {
+     newSize = CGSizeMake(size.width * widthRatio,  size.height * widthRatio)
+     }
+     
+     // This is the rect that we've calculated out and this is what is actually used below
+     let rect = CGRectMake(0, 0, newSize.width, newSize.height)
+     
+     // Actually do the resizing to the rect using the ImageContext stuff
+     UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+     image.drawInRect(rect)
+     let newImage = UIGraphicsGetImageFromCurrentImageContext()
+     UIGraphicsEndImageContext()
+     
+     return newImage
+     } **/
+    
     
     //MARK: SceneLocationViewDelegate
     
