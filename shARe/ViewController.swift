@@ -14,10 +14,8 @@ import ARKit
 
 @available(iOS 11.0, *)
 class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate, ARSCNViewDelegate{
+    
     let sceneLocationView = SceneLocationView()
-    
-    @IBOutlet var sceneView: ARSCNView!
-    
     
     let mapView = MKMapView()
     var userAnnotation: MKPointAnnotation?
@@ -44,6 +42,10 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     override func viewDidLoad() {
         super.viewDidLoad()
+      
+        let scene = SCNScene()
+        sceneLocationView.scene = scene
+        sceneLocationView.autoenablesDefaultLighting = true
         
         infoLabel.font = UIFont.systemFont(ofSize: 10)
         infoLabel.textAlignment = .left
@@ -65,12 +67,6 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
 //        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
         sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
-        
-        sceneView.delegate = self
-        sceneView.showsStatistics = true
-        let scene = SCNScene()
-        sceneView.scene = scene
-        sceneView.autoenablesDefaultLighting = true
         
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
@@ -107,9 +103,9 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
         // HIT TEST : REAL WORLD
         // Get Screen Centre
-        let screenCentre : CGPoint = CGPoint(x: self.sceneView.bounds.midX, y: self.sceneView.bounds.midY)
+        let screenCentre : CGPoint = CGPoint(x: self.sceneLocationView.bounds.midX, y: self.sceneLocationView.bounds.midY)
         
-        let arHitTestResults : [ARHitTestResult] = sceneView.hitTest(screenCentre, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
+        let arHitTestResults : [ARHitTestResult] = sceneLocationView.hitTest(screenCentre, types: [.featurePoint]) // Alternatively, we could use '.existingPlaneUsingExtent' for more grounded hit-test-points.
         
         if let closestResult = arHitTestResults.first {
             // Get Coordinates of HitTest
@@ -117,11 +113,9 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
             
             // Create 3D Text
-            let yCoord = String(describing: self.sceneView.bounds.midY)
-            let xCoord = String(describing: self.sceneView.bounds.midX)
             
-            let node : SCNNode = createNewBubbleParentNode( "\(xCoord) \(yCoord)" )
-            sceneView.scene.rootNode.addChildNode(node)
+            let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
+            sceneLocationView.scene.rootNode.addChildNode(node)
             node.position = worldCoord
         }
     }
@@ -291,7 +285,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+  /**  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
         
         if let touch = touches.first {
@@ -318,7 +312,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 }
             }
         }
-    }
+    } */
     
     //MARK: MKMapViewDelegate
     

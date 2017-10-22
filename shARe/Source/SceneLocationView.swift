@@ -108,7 +108,8 @@ public class SceneLocationView: ARSCNView, ARSCNViewDelegate {
         delegate = self
 
         // Show statistics such as fps and timing information
-        showsStatistics = false
+        showsStatistics = true
+        
 
         if showFeaturePoints {
             debugOptions = [ARSCNDebugOptions.showFeaturePoints]
