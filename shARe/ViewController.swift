@@ -219,16 +219,45 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             if closestResult.anchor != nil {
                 print("HIT A PIN!")
             } else {
-                // Print out coordinates
-               // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
+                
+                // empty string constraint
+                
                 if (textField.text! != ""){
-                    // Print out coordinates
-                    // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                     
-                    let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
-                    textFieldShouldReturn(textField)
-                    node.position = worldCoord
-                    sceneLocationView.scene.rootNode.addChildNode(node)
+                    // 140 char constraint
+                    
+                    let char_count = textField.text?.count
+                    
+                    if (char_count <= 140){
+                        
+                        // word wraping
+                        
+                        let str_array = textField.text.split(" ")
+                        let i = 0
+                        let final_str = ""
+                        
+                        while(char_count > 20){
+                            let line = str_array[i]
+                            i = i + 1
+                            while(line.count < 20){
+                                line = line + " " + str_array[i]
+                                i = i + 1
+                            }
+                            line = line + "\n"
+                            
+                            final_str = final_str + line
+                            
+                            char_count = char_count - line.count
+                        }
+                        
+                        // Print out coordinates
+                        // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
+                        
+                        let node : SCNNode = createNewBubbleParentNode( "\(final_str!)" )
+                        textFieldShouldReturn(textField)
+                        node.position = worldCoord
+                        sceneLocationView.scene.rootNode.addChildNode(node)
+                    }
                 }
             }
 
