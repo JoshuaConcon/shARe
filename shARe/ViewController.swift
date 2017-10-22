@@ -71,7 +71,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 print("Amazon DynamoDB Save Error: \(error)")
                 return
             }
-            print("A locaiton was added.")
+            print("A location was added.")
         })
       
 
@@ -85,6 +85,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         infoLabel.numberOfLines = 0
         sceneLocationView.addSubview(infoLabel)
         
+        /* No need for Timer */
         updateInfoLabelTimer = Timer.scheduledTimer(
             timeInterval: 0.1,
             target: self,
@@ -191,6 +192,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         view.placeholder = "Enter Message Here"
         view.font = UIFont.systemFont(ofSize: 15)
         view.borderStyle = UITextBorderStyle.roundedRect
+        view.isHidden = true
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -224,6 +226,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                     // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                     
                     let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
+                    textFieldShouldReturn(textField)
                     node.position = worldCoord
                     sceneLocationView.scene.rootNode.addChildNode(node)
                 }
@@ -246,8 +249,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         font = font?.withTraits(traits: .traitBold)
         bubble.font = font
         bubble.alignmentMode = kCAAlignmentCenter
-        bubble.firstMaterial?.diffuse.contents = UIColor.blue
-        bubble.firstMaterial?.specular.contents = UIColor.blue
+        bubble.firstMaterial?.diffuse.contents = UIColor.darkGray
+        bubble.firstMaterial?.specular.contents = UIColor.darkGray
         bubble.firstMaterial?.isDoubleSided = true
         // bubble.flatness // setting this too low can cause crashes.
         bubble.chamferRadius = CGFloat(bubbleDepth)
@@ -428,12 +431,12 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             infoLabel.text!.append("Heading: \(heading)º, accuracy: \(Int(round(accuracy)))º\n")
         }
         
-        let date = Date()
+        /*let date = Date()
         let comp = Calendar.current.dateComponents([.hour, .minute, .second, .nanosecond], from: date)
         
         if let hour = comp.hour, let minute = comp.minute, let second = comp.second, let nanosecond = comp.nanosecond {
             infoLabel.text!.append("\(String(format: "%02d", hour)):\(String(format: "%02d", minute)):\(String(format: "%02d", second)):\(String(format: "%03d", nanosecond / 1000000))")
-        }
+        } */
     }
     
   /**  override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
