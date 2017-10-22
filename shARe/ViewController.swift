@@ -224,19 +224,20 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 } else {
                     
                     let location = touch.location(in: self.view)
-
-                    if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
-                        print("left side of the screen")
-                        sceneLocationView.moveSceneHeadingAntiClockwise()
-                    } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
-                        print("right side of the screen")
-                        sceneLocationView.moveSceneHeadingClockwise()
-                    } else {
-                        let image = UIImage(named: "pin")!
-                        let annotationNode = LocationAnnotationNode(location: nil, image: image)
-                        annotationNode.scaleRelativeToDistance = true
-                        sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
-                    }
+                    
+                    
+//                    if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
+//                        print("left side of the screen")
+//                        sceneLocationView.moveSceneHeadingAntiClockwise()
+//                    } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
+//                        print("right side of the screen")
+//                        sceneLocationView.moveSceneHeadingClockwise()
+//                    } else {
+//                        let image = UIImage(named: "pin")!
+//                        let annotationNode = LocationAnnotationNode(location: nil, image: image)
+//                        annotationNode.scaleRelativeToDistance = true
+//                        sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
+//                    }
                 }
             }
         }
