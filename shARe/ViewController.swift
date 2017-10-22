@@ -32,7 +32,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     
     ///Whether to show a map view
     ///The initial value is respected
-    var showMapView: Bool = true
+    var showMapView: Bool = false
     
     var centerMapOnUserLocation: Bool = true
     
@@ -177,6 +177,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         
         // Dismisses the Keyboard by making the text field resign
         // first responder
+        textField.text=""
+        textField.isHidden = true
         textField.resignFirstResponder()
         
         // returns false. Instead of adding a line break, the text
@@ -198,6 +200,8 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
         // HIT TEST : REAL WORLD
         // Get Screen Centre
+        textField.isHidden = false
+        textField.becomeFirstResponder()
         
         let screenCentre : CGPoint = CGPoint(x: self.sceneLocationView.bounds.midX, y: self.sceneLocationView.bounds.midY)
         
@@ -215,10 +219,13 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             } else {
                 // Print out coordinates
                // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
-              
-                let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
-                sceneLocationView.scene.rootNode.addChildNode(node)
-                node.position = worldCoord
+                if (textField.text! != ""){
+                    let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
+                    sceneLocationView.scene.rootNode.addChildNode(node)
+                    textFieldShouldReturn(textField)
+                    
+                    node.position = worldCoord
+                }
             }
 
         }
@@ -238,7 +245,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         font = font?.withTraits(traits: .traitBold)
         bubble.font = font
         bubble.alignmentMode = kCAAlignmentCenter
-        bubble.firstMaterial?.diffuse.contents = UIColor.orange
+        bubble.firstMaterial?.diffuse.contents = UIColor.white
         bubble.firstMaterial?.specular.contents = UIColor.white
         bubble.firstMaterial?.isDoubleSided = true
         // bubble.flatness // setting this too low can cause crashes.
@@ -265,7 +272,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         
         return bubbleNodeParent
     }
-    
+    /**
     // MARK:- ---> Textfield Delegates
     func textFieldDidBeginEditing(textField: UITextField) {
         print("TextField did begin editing method called")
@@ -300,7 +307,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         textField.resignFirstResponder();
         return true;
     }
-    
+    */
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
