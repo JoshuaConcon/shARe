@@ -224,20 +224,19 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                 } else {
                     
                     let location = touch.location(in: self.view)
-                    
-                    
-//                    if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
-//                        print("left side of the screen")
-//                        sceneLocationView.moveSceneHeadingAntiClockwise()
-//                    } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
-//                        print("right side of the screen")
-//                        sceneLocationView.moveSceneHeadingClockwise()
-//                    } else {
-//                        let image = UIImage(named: "pin")!
-//                        let annotationNode = LocationAnnotationNode(location: nil, image: image)
-//                        annotationNode.scaleRelativeToDistance = true
-//                        sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
-//                    }
+
+                    if location.x <= 40 && adjustNorthByTappingSidesOfScreen {
+                        print("left side of the screen")
+                        sceneLocationView.moveSceneHeadingAntiClockwise()
+                    } else if location.x >= view.frame.size.width - 40 && adjustNorthByTappingSidesOfScreen {
+                        print("right side of the screen")
+                        sceneLocationView.moveSceneHeadingClockwise()
+                    } else {
+                        let image = UIImage(named: "pin")!
+                        let annotationNode = LocationAnnotationNode(location: self.sceneLocationView.bestLocationEstimate()?.location, image: image)
+                        annotationNode.scaleRelativeToDistance = true
+                        sceneLocationView.addLocationNodeForCurrentPosition(locationNode: annotationNode)
+                    }
                 }
             }
         }
@@ -268,7 +267,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         return nil
     }
     
-    // RESIZING IMAGES
+    /** RESIZING IMAGES
     func resizeImage(image: UIImage, targetSize: CGSize) -> UIImage {
         // USAGE:
         // let size = CGSize(width: 100, height: 100)
@@ -297,7 +296,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         UIGraphicsEndImageContext()
         
         return newImage
-    }
+    } **/
 
     
     //MARK: SceneLocationViewDelegate

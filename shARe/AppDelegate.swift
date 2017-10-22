@@ -8,14 +8,52 @@
 
 import UIKit
 import CocoaLumberjack
+import AWSAuthCore
+import AWSCore
+import AWSCognito
+import AWSS3
+import AWSDynamoDB
+import AWSSQS
+import AWSSNS
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    // set up the initialized flag
+    var isInitialized = false
 
     var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+        // AWS setup
+        let didFinishLaunching = AWSSignInManager.sharedInstance().interceptApplication(
+            application, didFinishLaunchingWithOptions: launchOptions)
+        
+        if (!isInitialized) {
+            AWSSignInManager.sharedInstance().resumeSession(completionHandler: {
+                (result: Any?, error: Error?) in
+                print("Result: \(result) \n Error:\(error)")
+            })
+            isInitialized = true
+        }
+        
+        // AWS Logging
+        let credentialProvider = AWSCognitoCredentialsProvider(regionType: .USEast1, identityPoolId: "us-east-1:e6b0fb0f-3eb8-4a96-804a-9c6ae399b0e7")
+        let configuration = AWSServiceConfiguration(region: .USEast1, credentialsProvider: credentialProvider)
+        AWSServiceManager.default().defaultServiceConfiguration = configuration
+        let transferManager = AWSS3TransferManager.default()
+        
+        let uploadRequest = AWSS3TransferManagerUploadRequest()
+        uploadRequest.bucket = "myBucket"
+        uploadRequest.key = "myTestFile.txt"
+        uploadRequest.body = uploadingFileURL
+        uploadRequest.contentLength = fileSize
+        
+        transferManager.upload(uploadRequest).continueWith(executor: AWSExecutor.mainThread(), block: { (task:AWSTask<AnyObject>) -> Any? in
+            // Do something with the response
+        })
+
+        
         // Override point for customization after application launch.
         
         DDLog.add(DDTTYLogger.sharedInstance) // TTY = Xcode console
