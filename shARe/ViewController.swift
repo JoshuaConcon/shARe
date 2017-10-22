@@ -21,7 +21,7 @@ import AWSSNS
 
 @available(iOS 11.0, *)
 class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate, ARSCNViewDelegate, UITextFieldDelegate{
-    
+         
     let sceneLocationView = SceneLocationView()
     
     let mapView = MKMapView()
@@ -50,7 +50,6 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        
         let scene = SCNScene()
         sceneLocationView.scene = scene
         sceneLocationView.autoenablesDefaultLighting = true
@@ -74,7 +73,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         //        sceneLocationView.orientToTrueNorth = false
         
         //        sceneLocationView.locationEstimateMethod = .coreLocationDataOnly
-        sceneLocationView.showAxesNode = true
+       // sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
         
         if displayDebugging {
@@ -106,10 +105,18 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(self.handleTap(gestureRecognize:)))
         view.addGestureRecognizer(tapGesture)
+
         
         textField.delegate = self
         view.setNeedsUpdateConstraints()
         view.addSubview(textField)
+        
+        let button = UIButton(type: UIButtonType.contactAdd) as UIButton
+        let screenCentre : CGPoint = CGPoint(x: self.sceneLocationView.bounds.midX, y: self.sceneLocationView.bounds.midY)
+        button.frame = CGRect(origin: screenCentre, size: CGSize(width: 100, height: 100))
+        button.center = view.center
+        button.tintColor = UIColor.white
+        view.addSubview(button)
         
     }
     override func updateViewConstraints() {
@@ -150,18 +157,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             .isActive = true
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        
-        // Dismisses the Keyboard by making the text field resign
-        // first responder
-        textField.text=""
-        textField.isHidden = true
-        textField.resignFirstResponder()
-        
-        // returns false. Instead of adding a line break, the text
-        // field resigns
-        return false
-    }
+   
     
     var textField: UITextField! = {
         let view = UITextField()
@@ -174,12 +170,15 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
     }()
     
     
-    
-    @objc func handleTap(gestureRecognize: UITapGestureRecognizer) {
+    @objc func handleTap(gestureRecognize: UITapGestureRecognizer?) {
         // HIT TEST : REAL WORLD
         // Get Screen Centre
+        
+        if (gestureRecognize != nil) {
         textField.isHidden = false
         textField.becomeFirstResponder()
+        }
+        
         
         let screenCentre : CGPoint = CGPoint(x: self.sceneLocationView.bounds.midX, y: self.sceneLocationView.bounds.midY)
         
@@ -202,7 +201,10 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                     // let node : SCNNode = createNewBubbleParentNode( "\(String(describing: worldCoord))" )
                     
                     let node : SCNNode = createNewBubbleParentNode( "\(textField.text!)" )
-                    textFieldShouldReturn(textField)
+                    //textFieldShouldReturn(textField)
+                    textField.text=""
+                    textField.isHidden = true
+                    textField.resignFirstResponder()
                     node.position = worldCoord
                     sceneLocationView.scene.rootNode.addChildNode(node)
                 }
@@ -228,10 +230,22 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
                     print("Amazon DynamoDB Save Error: \(error)")
                     return
                 }
-                print("A locaiton was added.")
+                print("A location was added.")
             })
             
         }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        handleTap(gestureRecognize: nil)
+        textField.text=""
+        textField.isHidden = true
+        textField.resignFirstResponder()
+        
+        // returns false. Instead of adding a line break, the text
+        // field resigns
+        return false
     }
     
     func createNewBubbleParentNode(_ text : String) -> SCNNode {
