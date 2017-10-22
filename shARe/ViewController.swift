@@ -10,10 +10,14 @@ import UIKit
 import SceneKit 
 import MapKit
 import CocoaLumberjack
+import ARKit
 
 @available(iOS 11.0, *)
-class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate {
+class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDelegate, ARSCNViewDelegate{
     let sceneLocationView = SceneLocationView()
+    
+    @IBOutlet var sceneView: ARSCNView!
+    
     
     let mapView = MKMapView()
     var userAnnotation: MKPointAnnotation?
@@ -62,6 +66,12 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         sceneLocationView.showAxesNode = true
         sceneLocationView.locationDelegate = self
         
+        sceneView.delegate = self
+        sceneView.showsStatistics = true
+        let scene = SCNScene()
+        sceneView.scene = scene
+        sceneView.autoenablesDefaultLighting = true
+        
         if displayDebugging {
             sceneLocationView.showFeaturePoints = true
         }
@@ -107,7 +117,10 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
             let worldCoord : SCNVector3 = SCNVector3Make(transform.columns.3.x, transform.columns.3.y, transform.columns.3.z)
             
             // Create 3D Text
-            let node : SCNNode = createNewBubbleParentNode(latestPrediction)
+            let yCoord = String(describing: self.sceneView.bounds.midY)
+            let xCoord = String(describing: self.sceneView.bounds.midX)
+            
+            let node : SCNNode = createNewBubbleParentNode( "\(xCoord) \(yCoord)" )
             sceneView.scene.rootNode.addChildNode(node)
             node.position = worldCoord
         }
@@ -121,6 +134,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         billboardConstraint.freeAxes = SCNBillboardAxis.Y
         
         // BUBBLE-TEXT
+        let bubbleDepth : Float = 0.01
         let bubble = SCNText(string: text, extrusionDepth: CGFloat(bubbleDepth))
         var font = UIFont(name: "Futura", size: 0.15)
         font = font?.withTraits(traits: .traitBold)
@@ -153,6 +167,7 @@ class ViewController: UIViewController, MKMapViewDelegate, SceneLocationViewDele
         
         return bubbleNodeParent
     }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -400,5 +415,12 @@ extension UIView {
         }
         
         return recursiveSubviews
+    }
+}
+extension UIFont {
+    // Based on: https://stackoverflow.com/questions/4713236/how-do-i-set-bold-and-italic-on-uilabel-of-iphone-ipad
+    func withTraits(traits:UIFontDescriptorSymbolicTraits...) -> UIFont {
+        let descriptor = self.fontDescriptor.withSymbolicTraits(UIFontDescriptorSymbolicTraits(traits))
+        return UIFont(descriptor: descriptor!, size: 0)
     }
 }

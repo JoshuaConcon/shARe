@@ -16,7 +16,7 @@ import AWSDynamoDB
 import AWSSQS
 import AWSSNS
 
-@IBAction func addButton(_ sender: Any) {
+/** @IBAction func addButton(_ sender: Any) {
     
     let dynamoDbObjectMapper = AWSDynamoDBObjectMapper.default()
     
@@ -42,7 +42,7 @@ import AWSSNS
         print("An item was saved.")
     })
     
-}
+} */
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -54,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // AWS setup
-        let didFinishLaunching = AWSSignInManager.sharedInstance().interceptApplication(
+        /* let didFinishLaunching = AWSSignInManager.sharedInstance().interceptApplication(
             application, didFinishLaunchingWithOptions: launchOptions)
         
         if (!isInitialized) {
@@ -79,11 +79,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         transferManager.upload(uploadRequest).continueWith(executor: AWSExecutor.mainThread(), block: { (task:AWSTask<AnyObject>) -> Any? in
             // Do something with the response
-        })
+        }) */
 
         
         // Override point for customization after application launch.
-        
+    
         DDLog.add(DDTTYLogger.sharedInstance) // TTY = Xcode console
         let fileLogger: DDFileLogger = DDFileLogger() // File Logger
         fileLogger.rollingFrequency = TimeInterval(60*60*24)  // 24 hours
