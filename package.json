@@ -10,7 +10,7 @@
     "amazon-cognito-identity-js": "^1.21.0",
     "aws-sdk": "^2.138.0",
     "aws4": "^1.6.0",
-    "axios": "^0.16.2",
+    "axios": "^0.21.1",
     "css-loader": "^0.28.7",
     "link-react": "^3.0.0",
     "querystring-browser": "^1.0.4",
